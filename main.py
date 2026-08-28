@@ -21,9 +21,15 @@ def test_models(db):
 
     athserv = services.AuthService(db)
     athserv.register_user("pera_username", "password")
-    korisnik = md.User(1,"pera_username","passtest")
+    # valjalo bi preraditi mozda da athserv uzima user objekat?
+    korisnik = athserv.get_user("pera_username")
+
     print(korisnik)
 
+    athserv.authenticate_user("pera_username","netacnaloz")
+    athserv.authenticate_user("pera_username","password")
+
+    athserv.delete_user(korisnik)
 
 
 if __name__ == "__main__":
