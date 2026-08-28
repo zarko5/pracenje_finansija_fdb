@@ -7,7 +7,7 @@ class AuthService:
         self.db_manager = db_manager
 
     # def register_user(self, username, password):
-    def register_user(self, username, password):
+    def register_user(self, username: str, password: str):
         user_exists = self.db_manager.fetch_one("SELECT * FROM users WHERE username = ?", (username,))
         if user_exists:
             raise ValueError("Korisničko ime već postoji.")
