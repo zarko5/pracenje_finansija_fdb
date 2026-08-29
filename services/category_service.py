@@ -38,7 +38,7 @@ class CategoryService():
     def delete_category(self, category_name: str) -> Category:
         kategorija_postoji = self.get_category(category_name)
 
-        if kategorija is None:
+        if kategorija_postoji is None:
             print(f"Kategorija sa imenom {category_name} ne postoji, brisanje nije moguce.")
             return None
 
