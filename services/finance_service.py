@@ -17,18 +17,69 @@ class FinanceService():
             print(f"greska prilikom dodavanja transakcije: {e}")
             return False
 
-    def get_user_transactions(self, user_id: str) -> list[Transaction] | None:   ## za ovo bi mogli mozda da passujemo usera celog, al mnogo je to importa okolo
-        try:
-            trans_objects = self.db_manager.fetch_all("SELECT * FROM transactions WHERE user_id = ?",(user_id,))
-            lista_transakcija = []
-            for obj in trans_objects:
-                trn_temp = Transaction(obj["id"],obj["user_id"],obj["category_id"],obj["amount"], obj["transaction_type"],obj["transaction_date"], obj["description"])
-                lista_transakcija.append(trn_temp)
-            return lista_transakcija
+    def get_transactions(
+        self,
+        user_id: int | None = None,
+        category_id: int | None = None,
+        transaction_type: str | None = None,
+        date_from: str | None = None,
+        date_to: str | None = None
+    ) -> list[Transaction] | None:  
+        query = "SELECT * FROM transactions WHERE 1=1"
+        params = []
 
+        if user_id is not None:
+            query += " AND user_id = ?"
+            params.append(user_id)
+
+        if category_id is not None:
+            query += " AND category_id = ?"
+            params.append(category_id)
+
+        if transaction_type is not None:
+            query += " AND transaction_type = ?"
+            params.append(transaction_type)
+
+        if date_from is not None:
+            query += " AND transaction_date >= ?"
+            params.append(date_from)
+
+        if date_to is not None:
+            query += " AND transaction_date <= ?"
+            params.append(date_to)
+
+        query += " ORDER BY transaction_date DESC"
+
+        try:
+            rows = self.db_manager.fetch_all(query, tuple(params))
+            return [
+                Transaction(
+                    row["id"],
+                    row["user_id"],
+                    row["category_id"],
+                    row["amount"],
+                    row["transaction_type"],
+                    row["transaction_date"],
+                    row["description"]
+                )
+                for row in rows
+            ]
         except Exception as e:
-            print(f"greska prilikom trazenja transakcija za korisnika {user_id}")
+            print(f"Greška pri vraćanju transakcija: {e}")
             return None
+
+
+    def get_user_transactions(self, user_id: str) -> list[Transaction] | None:   ## za ovo bi mogli mozda da passujemo usera celog, al mnogo je to importa okolo
+        return self.get_transactions(user_id=user_id)
+
+    def get_user_transactions_by_category(self, user_id: str, category_id: str) -> list[Transaction] | None:
+        return self.get_transactions(user_id=user_id, category_id=category_id)
+
+    def get_user_transactions_by_type(self, user_id: str, transaction_type: str) -> list[Transaction] | None:
+        return self.get_transactions(user_id=user_id, transaction_type=transaction_type)
+
+    def get_user_transactions_by_date_range(self, user_id: str, date_from: str, date_to: str) -> list[Transaction] | None:
+        return self.get_transactions(user_id=user_id, date_from=date_from, date_to=date_to)
 
     def get_user_transactions_details(self, user_id: str) -> list[TransactionView] | None:
         rows = self.db_manager.fetch_all("""
@@ -79,6 +130,8 @@ class FinanceService():
         transakcije_korisnika = self.get_user_transactions(user_id)
         expenses = 0
         ### ovo moze sigurno u one lineru da se resi, al ajde, kasnije
+        ### zapravo i ovo i funkcija iznad mogu da budu
+        ### jedan sql upit
         for transakcija in transakcije_korisnika:
             if transakcija.amount < 0: # sve pozitivne kolicine su prihodi
                 expenses += transakcija.amount
