@@ -16,7 +16,7 @@ def test_models(db):
     category = md.Category(1, "gorivo")
     print(category)
 
-    transakcija = md.Transaction(1, 1, 50,"prihodi","2026-02-03","plata")
+    transakcija = md.Transaction(1,1, 1, 50,"prihodi","2026-02-03","plata")
     print(transakcija)
 
     athserv = services.AuthService(db)
@@ -26,7 +26,10 @@ def test_models(db):
 
     print(korisnik)
 
+    print("auth sa pogresnim kredencijalima", end=": ")
     athserv.authenticate_user("pera_username","netacnaloz")
+
+    print("auth sa tacnim podatcima", end=": ")
     athserv.authenticate_user("pera_username","password")
 
     athserv.delete_user(korisnik)

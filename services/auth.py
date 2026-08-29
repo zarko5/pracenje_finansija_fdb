@@ -55,6 +55,7 @@ class AuthService:
 
         try:
             ph.verify(user.password_hash,password)
+            print (f"korisnik {username} uspesno autentifikovan")
             return user
         except Exception as e:
             print("Greska u autentifikaciji")
