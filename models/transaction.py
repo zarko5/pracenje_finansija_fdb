@@ -10,3 +10,7 @@ class Transaction:
         self.description = desc
     def __str__(self) -> str:
         return f"Transaction(id={self.id}, user={self.user_id}, category_id={self.category_id}, amount={self.amount}, type='{self.type}', date='{self.date}', description='{self.description}')"
+
+    ### treba nam ovo samo za lepo stampanje kad je lista u pitanju
+    def __repr__(self) -> str: 
+        return self.__str__()

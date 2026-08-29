@@ -45,6 +45,9 @@ def test_models(db):
 
     fin_servis.add_transaction(transakcija)
 
+    print(fin_servis.get_user_transactions(korisnik.id))
+
+    # print(trnlist[0])
 
     athserv.delete_user(korisnik)
 
