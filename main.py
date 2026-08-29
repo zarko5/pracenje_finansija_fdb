@@ -27,7 +27,6 @@ def test_models(db):
     print("auth sa tacnim podatcima", end=": ")
     athserv.authenticate_user("pera_username","password")
 
-    athserv.delete_user(korisnik)
 
 
 
@@ -39,9 +38,15 @@ def test_models(db):
 
 
     fin_servis = services.FinanceService(db)
-    transakcija = md.Transaction(1,1, 1, 50,"prihodi","2026-02-03","plata")
-    # print(transakcija)
+
+    # transakcija da se reworkuje, ili i za kategorije i transakcije i korisnike da se napravi proto
+    # bez id-ja koji se passuje funkcijama za create?
+    transakcija = md.Transaction(0, korisnik.id, gorivo_kategorija.id, 50,"prihodi","2026-02-03","plata")
+
     fin_servis.add_transaction(transakcija)
+
+
+    athserv.delete_user(korisnik)
 
 
 if __name__ == "__main__":
