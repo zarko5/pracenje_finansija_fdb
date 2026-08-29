@@ -122,11 +122,11 @@ class FinanceService():
             SELECT c.name AS category_name, SUM(t.amount) AS total_expense
             FROM transactions t
             JOIN categories c ON c.id = t.category_id
-            WHERE t.user_id = ?
+            WHERE t.user_id = ? AND t.amount < 0
             GROUP BY c.name
         """, (user_id,))
-        ### WHERE t.user_id = ? #AND t.amount < 0 ## ja bih ostavio primarno ovako
         ### da su i troskovi i income tu, myb menjati kasnije
+        ### WHERE t.user_id = ? ako hocemo i troskove i income, videti
 
 
         return {row["category_name"]: row["total_expense"] for row in rows}
