@@ -18,8 +18,6 @@ def test_models(db):
 
     korisnik = athserv.get_user("pera_username")
 
-#    print(korisnik)
-
     ## auth test
     print("auth sa pogresnim kredencijalima", end=": ")
     athserv.authenticate_user("pera_username","netacnaloz")
@@ -28,22 +26,21 @@ def test_models(db):
     athserv.authenticate_user("pera_username","password")
 
 
-
-
-    # category = md.Category(1, "gorivo")
     kat_servis = services.CategoryService(db)
     gorivo_kategorija = kat_servis.add_category("gorivo")
-    gorivo_kategorija = kat_servis.get_category("gorivo")
-    print(gorivo_kategorija)
+    posao_onetime_kategorija = kat_servis.add_category("posao onetime")
 
 
     fin_servis = services.FinanceService(db)
 
     # transakcija da se reworkuje, ili i za kategorije i transakcije i korisnike da se napravi proto
     # bez id-ja koji se passuje funkcijama za create?
-    transakcija = md.Transaction(0, korisnik.id, gorivo_kategorija.id, 50,"prihodi","2026-02-03","plata")
-
+    transakcija = md.Transaction(0, korisnik.id, posao_onetime_kategorija.id, 2550,"prihodi","2026-02-03","izbacivanje suta")
     fin_servis.add_transaction(transakcija)
+
+    transakcija_trosak = md.Transaction(0, korisnik.id, gorivo_kategorija.id, -1230,"trosak","2026-02-03","10l, OMV pumpa")
+    fin_servis.add_transaction(transakcija_trosak)
+
 
     print(fin_servis.get_user_transactions(korisnik.id))
 
@@ -52,9 +49,9 @@ def test_models(db):
     print(f"ukupan balans: {fin_servis.get_total_balance(korisnik.id)}")
 
     fin_servis.export_csv(korisnik.id, "test.csv")
-    # print(trnlist[0])
 
-    athserv.delete_user(korisnik)
+
+    athserv.delete_user(korisnik) ### na brisanju korisnika se kaskadno brisu i sve transakcije
 
 
 if __name__ == "__main__":

@@ -7,13 +7,15 @@ class CategoryService():
         ## treba da se preradi da se proverava da li vec postoji itd
         # i generalno da se naprave ostale operacije, brisanje, izmena, 
         # i da se sve to radi preko get_category, znaci maltene da sve radi kao sto radi u auth.py    
-    def add_category(self, category_name: str) -> Category | bool:
-        if self.get_category(category_name) is not None:
-            print (f"kategorija sa imenom {category_name} vec postoji u bazi")
-            return False
-            # moozda bi bilo pametno da ovo zapravo returnuje tu kategoriju koja vec postoji?,
-            # al videcemo
+    def add_category(self, category_name: str) -> Category:
+        kategorija_postoji = self.get_category(category_name)
         
+        if kategorija_postoji is not None:
+            print (f"kategorija sa imenom {category_name} vec postoji u bazi")
+            return kategorija_postoji
+            # msm da je bolje mozda da returnuje kategoriju koja je, ako i postoji
+        
+        ## preraditi na try catch 
         self.db_manager.execute("INSERT INTO categories(name) VALUES (?)", (category_name,))
         return self.get_category(category_name)
 
