@@ -35,7 +35,7 @@ def test_models(db):
 
     # transakcija da se reworkuje, ili i za kategorije i transakcije i korisnike da se napravi proto
     # bez id-ja koji se passuje funkcijama za create?
-    transakcija = md.Transaction(0, korisnik.id, posao_onetime_kategorija.id, 2550,"prihodi","2026-02-03","izbacivanje suta")
+    transakcija = md.Transaction(0, korisnik.id, posao_onetime_kategorija.id, 2550,"prihodi","2026-01-01","izbacivanje suta")
     fin_servis.add_transaction(transakcija)
 
     transakcija_trosak = md.Transaction(0, korisnik.id, gorivo_kategorija.id, -1230,"trosak","2026-02-03","10l, OMV pumpa")
@@ -51,6 +51,12 @@ def test_models(db):
     fin_servis.export_csv(korisnik.id, "test.csv")
 
 
+    print(fin_servis.get_user_transactions_by_category(korisnik.id, posao_onetime_kategorija.id))   
+    print(fin_servis.get_user_transactions_by_date_range(korisnik.id, "2026-02-01", "2026-02-04"))
+
+    print(f"ukupni troskovi po kategorijama: {fin_servis.get_expenses_by_category(korisnik.id)}")
+
+    print(f"ukupni mesecni troskovi {fin_servis.get_monthly_expenses(korisnik.id)}")
     athserv.delete_user(korisnik) ### na brisanju korisnika se kaskadno brisu i sve transakcije
 
 

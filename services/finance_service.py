@@ -117,6 +117,38 @@ class FinanceService():
         ]
 
 
+    def get_expenses_by_category(self, user_id: str) -> dict[str, float]:
+        rows = self.db_manager.fetch_all("""
+            SELECT c.name AS category_name, SUM(t.amount) AS total_expense
+            FROM transactions t
+            JOIN categories c ON c.id = t.category_id
+            WHERE t.user_id = ?
+            GROUP BY c.name
+        """, (user_id,))
+        ### WHERE t.user_id = ? #AND t.amount < 0 ## ja bih ostavio primarno ovako
+        ### da su i troskovi i income tu, myb menjati kasnije
+
+
+        return {row["category_name"]: row["total_expense"] for row in rows}
+
+    def get_monthly_expenses(self, user_id: str) -> dict[str, float]:
+        rows = self.db_manager.fetch_all("""
+            SELECT
+                strftime('%Y-%m', transaction_date) AS month,
+                SUM(amount) AS total_expense
+            FROM transactions
+            WHERE user_id = ?
+            AND amount < 0
+            GROUP BY strftime('%Y-%m', transaction_date)
+            ORDER BY month DESC
+        """, (user_id,))
+
+        return {
+            row["month"]: float(row["total_expense"])
+            for row in rows
+        }
+
+
     def get_total_income(self, user_id: str) -> float:
         transakcije_korisnika = self.get_user_transactions(user_id)
         income = 0
