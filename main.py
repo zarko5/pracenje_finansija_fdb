@@ -47,6 +47,11 @@ def test_models(db):
 
     print(fin_servis.get_user_transactions(korisnik.id))
 
+    print(f"ukupan prihod: {fin_servis.get_total_income(korisnik.id)}")
+    print(f"ukupan trosak: {fin_servis.get_total_expenses(korisnik.id)}")
+    print(f"ukupan balans: {fin_servis.get_total_balance(korisnik.id)}")
+
+    fin_servis.export_csv(korisnik.id, "test.csv")
     # print(trnlist[0])
 
     athserv.delete_user(korisnik)
