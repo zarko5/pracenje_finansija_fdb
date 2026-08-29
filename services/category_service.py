@@ -35,3 +35,5 @@ class CategoryService():
 
         return Category(category_row["id"],category_row["name"])
     
+    def delete_category():
+        pass
