@@ -35,5 +35,18 @@ class CategoryService():
 
         return Category(category_row["id"],category_row["name"])
     
-    def delete_category():
-        pass
+    def delete_category(self, category_name: str) -> Category:
+        kategorija_postoji = self.get_category(category_name)
+
+        if kategorija is None:
+            print(f"Kategorija sa imenom {category_name} ne postoji, brisanje nije moguce.")
+            return None
+
+        try:
+            self.db_manager.execute("DELETE FROM categories WHERE name = ?",(category_name))
+            print(f"Kategorija {category_name} je uspesno obrisna.")
+            return Kategorija
+
+        except Exception as e:
+            print{f"Greska prilkom brisanja kategorije {e}"}
+            return None
