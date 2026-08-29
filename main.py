@@ -12,20 +12,15 @@ def main():
 
 
 def test_models(db):
-    # test modela
-    category = md.Category(1, "gorivo")
-    print(category)
-
-    transakcija = md.Transaction(1,1, 1, 50,"prihodi","2026-02-03","plata")
-    print(transakcija)
-
+    # prvo pravimo korisnika
     athserv = services.AuthService(db)
     athserv.register_user("pera_username", "password")
-    # valjalo bi preraditi mozda da athserv uzima user objekat?
+
     korisnik = athserv.get_user("pera_username")
 
-    print(korisnik)
+#    print(korisnik)
 
+    ## auth test
     print("auth sa pogresnim kredencijalima", end=": ")
     athserv.authenticate_user("pera_username","netacnaloz")
 
@@ -33,6 +28,20 @@ def test_models(db):
     athserv.authenticate_user("pera_username","password")
 
     athserv.delete_user(korisnik)
+
+
+
+    # category = md.Category(1, "gorivo")
+    kat_servis = services.CategoryService(db)
+    gorivo_kategorija = kat_servis.add_category("gorivo")
+    gorivo_kategorija = kat_servis.get_category("gorivo")
+    print(gorivo_kategorija)
+
+
+    fin_servis = services.FinanceService(db)
+    transakcija = md.Transaction(1,1, 1, 50,"prihodi","2026-02-03","plata")
+    # print(transakcija)
+    fin_servis.add_transaction(transakcija)
 
 
 if __name__ == "__main__":

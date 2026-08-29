@@ -8,8 +8,9 @@ class FinanceService():
     # i ili da se validiraju podatci, u smislu klasa itd za kategoreje recimo
     def add_transaction(self, transaction: Transaction) -> bool:
         try:
-            self.db_manager.execute("INSERT INTO transactions (user_id, category_id, amount, type, date, description) VALUES (?, ?, ?, ?, ?)", 
+            self.db_manager.execute("INSERT INTO transactions (user_id, category_id, amount, transaction_type, transaction_date, description) VALUES (?, ?, ?, ?, ?, ?)", 
                                     (transaction.user_id,transaction.category_id, transaction.amount, transaction.type, transaction.date, transaction.description))
+            print (f"transakcija uspesno dodata")
             return True
         except Exception as e:
             print(f"greska prilikom dodavanja transakcije: {e}")
