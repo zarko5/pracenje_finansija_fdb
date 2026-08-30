@@ -33,6 +33,14 @@ class CategoryService():
 
         return Category(category_row["id"],category_row["name"])
 
+    def get_all_categories(self) -> list[Category]:
+        category_rows = self.db_manager.fetch_all("SELECT * FROM categories")
+
+        if category_rows is None:
+            return None
+
+        return [Category(row["id"],row["name"]) for row in category_rows]
+
     def get_category_by_id(self, id: int):
         category_row = self.db_manager.fetch_one("SELECT * FROM categories WHERE id = ?", (id,))
 
