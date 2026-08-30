@@ -70,7 +70,7 @@ class LoginEkran(ttk.Frame):
             messagebox.showwarning(message="Netacni kredencijali")
         else:
             # ako je okej, vratio se userid, treba da prelazimo na sledeci ekran i da passujemo usera
-            pass
+            self.controller.open_main(ret) 
         # pass
 
     def btn_reg_click(self):
