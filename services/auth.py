@@ -1,6 +1,6 @@
 from argon2 import PasswordHasher
 from models import User
-
+import os
 
 ph = PasswordHasher()
 
@@ -38,6 +38,14 @@ class AuthService:
     # mozda dodati za ovu metodu da moze da uzima i str pa da pozove samo get_user
     def delete_user(self, user: User) -> bool:
         try:
+            ### zbog dodavanja slika, ovde hendlamo delete i slika sa transakcija
+            ### msm u sustini mozemo i da pobrisemo i svaku transakciju, al to svakako baza kaskadira tkd
+            image_urls = self.db_manager.fetch_all("SELECT image_url FROM transactions WHERE user_id = ?", (user.id,))
+
+            for img_url in image_urls:
+                if img_url["image_url"] and os.path.exists(img_url["image_url"]):
+                    os.remove(img_url["image_url"])
+
             self.db_manager.execute("DELETE FROM users WHERE id= ?", (user.id,))
             print(f"korisnik '{user.username}' uspesno obrisan")
             return True
