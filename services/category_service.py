@@ -5,7 +5,7 @@ class CategoryService():
         self.db_manager = db_manager
 
         # Preradjeno da proverava na svim da li postoji, i na update dodana zastita da nema duplikat
-        ## CRUD je ubacen
+        ## ubacena sve komande za kategorije
         ### i da se sve to radi preko get_category, znaci maltene da sve radi kao sto radi u auth.py -
     def add_category(self, category_name: str) -> Category:
         kategorija_postoji = self.get_category(category_name)
