@@ -27,3 +27,19 @@ class App(tk.Tk):
 
         # self.notebook.add(self.dashboard_tab, text=" Pregled (Dashboard)")
         # self.notebook.add(self.add_receipt_tab, text="Dodaj račun")
+
+
+    def auth_gui(self, username: str, password: str) -> bool | int:
+        usr = self.auth_service.authenticate_user(username, password)
+        if usr is False:
+            return False
+        else: 
+            return usr.id
+
+    def register_gui(self, username: str, password: str) -> bool:
+        if self.auth_service.get_user(username) is not None:
+            ## korisnik vec postoji situacija
+            return False
+
+        if self.auth_service.register_user(username, password) is not None:
+            return True

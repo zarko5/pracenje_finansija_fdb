@@ -23,7 +23,8 @@ class AuthService:
         
         except Exception as e:
             print(f"Greška prilikom registracije korisnika: {e}")
-            raise ValueError("Greška prilikom registracije korisnika.")
+            # raise ValueError("Greška prilikom registracije korisnika.")
+            return None
 
 
     def get_user(self, username: str) -> User | None:
@@ -54,12 +55,12 @@ class AuthService:
             return False
 
 
-    def authenticate_user(self, username: str, password: str) -> User | None:
+    def authenticate_user(self, username: str, password: str) -> User | bool:
         user = self.get_user(username)
 
         if user is None:
             print(f"korisnik {username} nije pronadjen u bazi")
-            return None
+            return False
 
         try:
             ph.verify(user.password_hash,password)
@@ -67,5 +68,5 @@ class AuthService:
             return user
         except Exception as e:
             print("Greska u autentifikaciji")
-            return None
+            return False
 

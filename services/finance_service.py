@@ -21,8 +21,7 @@ class FinanceService():
 
     
     def get_transaction(self, transaction: Transaction | int) -> Transaction | None:
-
-        if isinstance(transaction.id, Transaction):
+        if isinstance(transaction, Transaction):
             id = transaction.id
         else:
             id = transaction
