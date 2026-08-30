@@ -9,8 +9,8 @@ class FinanceService():
     # i ili da se validiraju podatci, u smislu klasa itd za kategoreje recimo
     def add_transaction(self, transaction: Transaction) -> bool:
         try:
-            self.db_manager.execute("INSERT INTO transactions (user_id, category_id, amount, transaction_type, transaction_date, description) VALUES (?, ?, ?, ?, ?, ?)", 
-                                    (transaction.user_id,transaction.category_id, transaction.amount, transaction.type, transaction.date, transaction.description))
+            self.db_manager.execute("INSERT INTO transactions (user_id, category_id, amount, transaction_type, transaction_date, description, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)", 
+                                    (transaction.user_id,transaction.category_id, transaction.amount, transaction.type, transaction.date, transaction.description, transaction.receipt_image_path))
             print (f"transakcija uspesno dodata")
             return True
         except Exception as e:
@@ -60,7 +60,8 @@ class FinanceService():
                     row["amount"],
                     row["transaction_type"],
                     row["transaction_date"],
-                    row["description"]
+                    row["description"],
+                    row["image_url"]
                 )
                 for row in rows
             ]
@@ -92,7 +93,8 @@ class FinanceService():
                 t.amount,
                 t.transaction_type,
                 t.transaction_date,
-                t.description
+                t.description,
+                t.image_url
             FROM transactions t
             JOIN users u ON u.id = t.user_id
             JOIN categories c ON c.id = t.category_id
@@ -108,7 +110,8 @@ class FinanceService():
                     amount=row["amount"],
                     transaction_type=row["transaction_type"],
                     transaction_date=row["transaction_date"],
-                    desc=row["description"]
+                    desc=row["description"],
+                    img_path=row["image_url"]
                 ),
             row["username"], 
             row["category_name"]
@@ -180,7 +183,7 @@ class FinanceService():
                 f,
                 fieldnames=[
                     "id", "username", "category_name", "amount",
-                    "type", "date", "description"
+                    "type", "date", "description", "receipt_image_path"
                 ]
             )
             writer.writeheader()
@@ -193,6 +196,7 @@ class FinanceService():
                     "type": item.type,
                     "date": item.date,
                     "description": item.description,
+                    "receipt_image_path": item.receipt_image_path
                 })
         return True
     ## bilo bi dobro vrv isto kao sto je u auth servisu

@@ -53,6 +53,7 @@ class DatabaseManager:
             transaction_type TEXT NOT NULL, -- 'prihod' ili 'trošak'
             transaction_date TEXT NOT NULL, -- YYYY-MM-DD format
             description TEXT,
+            image_url VARCHAR(500), -- putanja do slike racuna
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
             FOREIGN KEY (category_id) REFERENCES categories(id)
         );

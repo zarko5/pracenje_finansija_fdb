@@ -10,6 +10,7 @@ import httpx
 import json
 import base64
 import math
+import uuid
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 from bs4 import BeautifulSoup, NavigableString
@@ -23,6 +24,7 @@ class PoreskaService:
     LINE_HEIGHT_MULT = 1.42857143
     SCALE = 2
     DPI = (300, 300)
+    img_folder = "db_images/"
 
     def __init__(self):
         pass
@@ -34,8 +36,9 @@ class PoreskaService:
             resp = requests.get(url,headers=headers, timeout=10)
             resp.raise_for_status()
             data = resp.json()
-            items_data = PoreskaService.parse_scrape_url(url)
+            items_data, img_name = PoreskaService.parse_scrape_url(url)
             data["items"] = items_data["items"]
+            data["img_name"] = img_name
             return data
 
         except requests.exceptions.RequestException as e:
@@ -65,6 +68,7 @@ class PoreskaService:
             quantity = item.get("quantity")
             unit_price = item.get("unitPrice")
             total_price = item.get("total")
+            img_path = invoice_data.get("img_name")
 
             transaction = Transaction(
                 transaction_id=0,
@@ -73,7 +77,8 @@ class PoreskaService:
                 amount=total_price,
                 transaction_type="trosak",
                 transaction_date=datum.strftime("%Y-%m-%d"),
-                desc=f"{name} - {quantity} x {unit_price}"
+                desc=f"{name} - {quantity} x {unit_price}",
+                img_path=img_path
             )
             transactions.append(transaction)
 
@@ -110,14 +115,12 @@ class PoreskaService:
                 invoice = PoreskaService.extract_value(invoice_pattern, html)
 
                 # print(token or "missing token")
-                # print(invoice or "missing invoice")
-
-                output = PoreskaService.render_receipt_image(elements)
-                # print(f"[DEBUG] Receipt image saved to: {output}")
+                # print(invoice or "missing invoice") 
+                img_name = PoreskaService.img_folder + uuid.uuid4().hex + ".png"
+                output = PoreskaService.render_receipt_image(elements, img_name)
 
                 if token and invoice:
                     for attempt in range(1, PoreskaService.MAX_RETRIES + 1):
-                        # print(f"[DEBUG] Attempt {attempt}", file=sys.stderr)
                         try:
                             post_response = client.post(
                                 PoreskaService.POST_URL,
@@ -130,12 +133,9 @@ class PoreskaService:
                             post_response.raise_for_status()
                             data = post_response.json()
 
-                            # print(f"[DEBUG] {data}", file=sys.stderr)
 
                             if data.get("success") is True:
-                                # return json.dumps(data)
-                                return data
-                                break
+                                return (data, img_name)
 
                             time.sleep(PoreskaService.RETRY_DELAY)
 
