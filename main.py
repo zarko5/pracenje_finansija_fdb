@@ -8,7 +8,7 @@ def main():
     db = DatabaseManager()
     db.initialize_database()
     print("Baza inicijalizovana")
-    test_models(db)
+    # test_models(db)
 
     app = App(db)
     
