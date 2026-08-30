@@ -14,5 +14,13 @@ class LoginEkran(ttk.Frame):
         label1 = ttk.Label(self, text="Login",font=FONT_LARGE)
         label1.pack(pady=10)
 
-        label2 = ttk.Label(self, text="lab2", font=FONT_MEDIUM)
-        label2.pack(pady=10)
+        label2 = ttk.Label(self, text="Korisnicko ime", font=FONT_MEDIUM)
+        label2.pack(pady=10,padx=10)
+
+        input_username = ttk.Entry(self, font=FONT_MEDIUM)
+        input_username.pack(pady=10)
+
+
+        input_pass = ttk.Entry(self, font=FONT_MEDIUM)
+        input_pass.pack(pady=10)
+

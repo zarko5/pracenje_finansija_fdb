@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from gui.login import LoginEkran
 from .theme import *
+import services
 
 class App(tk.Tk):
     def __init__(self,db):
@@ -9,6 +10,11 @@ class App(tk.Tk):
 
         self.title("Aplikacija za pracenje finansija")
         self.geometry("1270x720")
+
+        self.auth_service = services.AuthService(db)
+        self.finance_service = services.FinanceService(db)
+        self.category_service = services.CategoryService(db)
+        # poreska je staticna ugl tkd
 
         # self.notebook = ttk.Notebook(self)
         # self.notebook.pack(fill="both", expand=True)
