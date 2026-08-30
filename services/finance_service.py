@@ -19,6 +19,23 @@ class FinanceService():
             print(f"greska prilikom dodavanja transakcije: {e}")
             return False
 
+    
+    def get_transaction(self, transaction: Transaction | int) -> Transaction | None:
+
+        if isinstance(transaction.id, Transaction):
+            id = transaction.id
+        else:
+            id = transaction
+
+        
+        try:
+            self.db_manager.fetch_one("SELECT * FROM transactions WHERE id = (?)",(id,))
+            return transaction
+        
+        except Exception as e:
+            print(f"greska, transakcija {id} nije pronadjena u bazi")
+            return None
+
     def get_transactions(
         self,
         user_id: int | None = None,
@@ -70,6 +87,25 @@ class FinanceService():
         except Exception as e:
             print(f"Greška pri vraćanju transakcija: {e}")
             return None
+
+    def delete_transaction(self, transakcija: Transaction)-> bool:
+        transakcija_check = self.get_transaction(transakcija)
+
+        if transakcija_check is None:
+            print(f"Transakcija nije pronadjenja, id: {transakcija.id}")
+            return False
+
+        try:
+            self.db_manager.execute("DELETE FROM transactions WHERE id = ?",(transakcija.id,))
+            if transakcija.receipt_image_path and os.path.exists(transakcija.receipt_image_path):
+                os.remove(transakcija.receipt_image_path)
+
+            print(f"Transakcija je uspesno obrisna.")
+            return True
+
+        except Exception as e:
+            print(f"Greska prilkom brisanja kategorije {e}")
+            return False
 
 
     def get_user_transactions(self, user_id: str) -> list[Transaction] | None:   ## za ovo bi mogli mozda da passujemo usera celog, al mnogo je to importa okolo
