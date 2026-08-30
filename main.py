@@ -9,7 +9,9 @@ def main():
     db.initialize_database()
     print("Baza inicijalizovana")
     test_models(db)
+
     app = App(db)
+    
     app.mainloop()
 
 
@@ -69,7 +71,9 @@ def test_models(db):
 
     print(f"ukupni mesecni troskovi {fin_servis.get_monthly_expenses(korisnik.id)}")
     athserv.delete_user(korisnik) ### na brisanju korisnika se kaskadno brisu i sve transakcije
-
+    kat_servis.delete_category(gorivo_kategorija.name)
+    kat_servis.update_category(posao_onetime_kategorija.id, "specijalni poslovi dragan")
+    kat_servis.delete_category(posao_onetime_kategorija.name)
 
 if __name__ == "__main__":
     main()
