@@ -1,6 +1,8 @@
 from models import Transaction, TransactionView
 import csv
+import os
 # from .category_service import CategoryService
+
 class FinanceService():
     def __init__(self,db_manager):
         self.db_manager = db_manager
