@@ -1,6 +1,7 @@
 from db.database_manager import DatabaseManager
 import models as md
 import services
+from gui import App
 # from models import *
 
 def main():
@@ -8,6 +9,8 @@ def main():
     db.initialize_database()
     print("Baza inicijalizovana")
     test_models(db)
+    app = App(db)
+    app.mainloop()
 
 
 
