@@ -5,19 +5,25 @@ class CategoryService():
         self.db_manager = db_manager
 
         ## treba da se preradi da se proverava da li vec postoji itd
-        # i generalno da se naprave ostale operacije, brisanje, izmena, 
-        # i da se sve to radi preko get_category, znaci maltene da sve radi kao sto radi u auth.py    
+        # i generalno da se naprave ostale operacije, brisanje, izmena,
+        # i da se sve to radi preko get_category, znaci maltene da sve radi kao sto radi u auth.py
     def add_category(self, category_name: str) -> Category:
         kategorija_postoji = self.get_category(category_name)
-        
+
         if kategorija_postoji is not None:
             print (f"kategorija sa imenom {category_name} vec postoji u bazi")
             return kategorija_postoji
             # msm da je bolje mozda da returnuje kategoriju koja je, ako i postoji
-        
-        ## preraditi na try catch 
-        self.db_manager.execute("INSERT INTO categories(name) VALUES (?)", (category_name,))
-        return self.get_category(category_name)
+
+        ## preuredjeno u try
+        try:
+            self.db_manager.execute("INSERT INTO categories(name) VALUES (?)", (category_name,))
+            print(f"Kategorija {category_name} je uspesno kreirana.")
+            return self.get_category(category_name)
+
+        except Exception as e:
+            print(f"Greska prilikom kreiranja kategorije {e}")
+            return False
 
     def get_category(self, category_name: str) -> Category | None:
         category_row = self.db_manager.fetch_one("SELECT * FROM categories WHERE name = ?", (category_name,))
@@ -29,12 +35,14 @@ class CategoryService():
 
     def get_category_by_id(self, id: int):
         category_row = self.db_manager.fetch_one("SELECT * FROM categories WHERE id = ?", (id,))
-    
+
         if category_row is None:
             return None
 
         return Category(category_row["id"],category_row["name"])
-    
+
+    def update_category(self, category_name: str): -> category
+
     def delete_category(self, category_name: str) -> bool:
         kategorija_postoji = self.get_category(category_name)
 
