@@ -1,1 +1,8 @@
 argon2-cffi
+matplotlib
+
+# ispod su zbog poreske vecinski
+requests
+httpx
+pillow
+beautifulsoup4
