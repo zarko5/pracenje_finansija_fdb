@@ -2,3 +2,4 @@ __pycache__
 finance.db
 db_images
 *.csv
+*.sh
