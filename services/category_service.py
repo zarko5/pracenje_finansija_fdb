@@ -41,7 +41,28 @@ class CategoryService():
 
         return Category(category_row["id"],category_row["name"])
 
-    def update_category(self, category_name: str): -> category
+    def update_category(self, category_id: int, new_name: str, ) -> bool:
+        kategorija_postoji = self.get_category_by_id(category_id)
+
+        if kategorija_postoji is None:
+            print(f"Kategorija {category_id} ne postoji, izmena nije moguca.")
+            return False
+
+        # ovde je samo dodatna provrea da ukoliko ime vec postoji ne moye da se izmeni u isto
+        ime_vec_postoji = self.get_category(new_name)
+
+        if ime_vec_postoji is not None and ime_vec_postoji.id != category_id:
+            print(f"Kategorija '{new_name}' vec postoji, nije moguce izmeniti")
+            return False
+
+        try:
+            self.db_manager.execute("UPDATE categories SET name = ? WHERE id = ?" ,(new_name, category_id))
+            print(f"Kategorija {kategorija_postoji.name} je uspesno izmenjena u {new_name}")
+            return True
+
+        except Exception as e:
+            print (f"Greska prilikom azuriranja kategorije {e}")
+            return False
 
     def delete_category(self, category_name: str) -> bool:
         kategorija_postoji = self.get_category(category_name)
