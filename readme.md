@@ -68,7 +68,7 @@ Podrazumevani tab pri otvaranju je pregled, koji omogućava unošenje nove trans
 
 Za manuelno kreiranje, unosi se datum, bira se kategorija, unosi se iznos, bira se tip, i opcionalno se bira slika koja ce se prikaciti uz transakciju.
 
-Za automatsko unošenje, potrebno je skenirati QR kod sa račuana, koji je u obliku `suf.purs.gov.rs/...` i nalepiti ga u polje za url. Pored toga, bira se kategorija koja će se pripisati ovim transakcijama, i klikom na dodaj sa računa, aplikacija će pokušati da sa poreske dobije sve informacije o računu, i stavkama.
+Za automatsko unošenje, potrebno je skenirati QR kod sa račuana(rucno), i zatim se unosi link koji je u obliku `suf.purs.gov.rs/...` i nalepiti ga u polje za url. Pored toga, bira se kategorija koja će se pripisati ovim transakcijama, i klikom na dodaj sa računa, aplikacija će pokušati da sa poreske dobije sve informacije o računu, i stavkama.
 Svaka stavka, se dodaje kao posebna transakcija, automatski se popunjavaju sva ostala polja, i čuva se rekreirana slika računa, nalik onome sa sajta poreske.
 
 
