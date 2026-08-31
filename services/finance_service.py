@@ -1,6 +1,7 @@
 from models import Transaction, TransactionView
 import csv
 import os
+import openpyxl
 # from .category_service import CategoryService
 
 class FinanceService():
@@ -277,6 +278,39 @@ class FinanceService():
                     "description": item.description,
                     "receipt_image_path": item.receipt_image_path
                 })
+        return True
+
+    def export_excel(self, user_id: str, fname: str) -> bool:
+        try:
+            from openpyxl import Workbook
+        except ImportError:
+            print("openpyxl nije instaliran")
+            return False
+
+        transakcije_korisnika_details = self.get_user_transactions_details(user_id) or []
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet.title = "Transakcije"
+
+        headers = [
+            "id", "username", "category_name", "amount",
+            "type", "date", "description", "receipt_image_path"
+        ]
+        sheet.append(headers)
+
+        for item in transakcije_korisnika_details:
+            sheet.append([
+                item.id,
+                item.username,
+                item.category_name,
+                item.amount,
+                item.type,
+                item.date,
+                item.description,
+                item.receipt_image_path,
+            ])
+
+        workbook.save(fname)
         return True
     ## bilo bi dobro vrv isto kao sto je u auth servisu
     # da imamo svaku operaciju, apdejt, delete, i get

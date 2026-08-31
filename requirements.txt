@@ -1,5 +1,6 @@
 argon2-cffi
 matplotlib
+openpyxl
 
 # ispod su zbog poreske vecinski
 requests
