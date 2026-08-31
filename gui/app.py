@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from gui.login import LoginEkran
 from gui.kategorije_screen import KategorijeScreen
+from gui.pregled_screen import PregledScreen
+from gui.transakcije_screen import TransakcijeScreen
 from .theme import *
 import services
 
@@ -10,7 +12,7 @@ class App(tk.Tk):
         super().__init__()
 
         self.title("Aplikacija za pracenje finansija")
-        self.geometry("1270x720")
+        self.geometry("1920x1000")
         self.current_id = None
         
 
@@ -53,7 +55,7 @@ class App(tk.Tk):
         self.notebook.tkraise()
 
     def _build_tabs(self):
-        self.pregled_tab = ttk.Frame(self.notebook)
+        self.pregled_tab = PregledScreen(self.notebook,self)
         self.notebook.add(self.pregled_tab, text="Pregled")
 
         self.kategorije_tab = KategorijeScreen(self.notebook,self)
@@ -63,5 +65,5 @@ class App(tk.Tk):
         self.notebook.add(self.izvestaji_tab, text="Izvestaji")
 
 
-        self.transakcije_tab = ttk.Frame(self.notebook)
+        self.transakcije_tab = TransakcijeScreen(self.notebook, self)
         self.notebook.add(self.transakcije_tab, text="Transakcije")

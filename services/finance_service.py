@@ -22,17 +22,28 @@ class FinanceService():
     
     def get_transaction(self, transaction: Transaction | int) -> Transaction | None:
         if isinstance(transaction, Transaction):
-            id = transaction.id
+            transaction_id = transaction.id
         else:
-            id = transaction
+            transaction_id = transaction
 
-        
         try:
-            self.db_manager.fetch_one("SELECT * FROM transactions WHERE id = (?)",(id,))
-            return transaction
-        
+            row = self.db_manager.fetch_one("SELECT * FROM transactions WHERE id = ?", (transaction_id,))
+            if row is None:
+                return None
+
+            return Transaction(
+                row["id"],
+                row["user_id"],
+                row["category_id"],
+                row["amount"],
+                row["transaction_type"],
+                row["transaction_date"],
+                row["description"],
+                row["image_url"]
+            )
+
         except Exception as e:
-            print(f"greska, transakcija {id} nije pronadjena u bazi")
+            print(f"greska, transakcija {transaction_id} nije pronadjena u bazi: {e}")
             return None
 
     def get_transactions(
@@ -86,6 +97,37 @@ class FinanceService():
         except Exception as e:
             print(f"Greška pri vraćanju transakcija: {e}")
             return None
+
+    def update_transaction(self, transaction: Transaction) -> bool:
+        transaction_check = self.get_transaction(transaction)
+
+        if transaction_check is None:
+            print(f"Transakcija nije pronadjena, id: {transaction.id}")
+            return False
+
+        try:
+            self.db_manager.execute(
+                """
+                UPDATE transactions
+                SET user_id = ?, category_id = ?, amount = ?, transaction_type = ?, transaction_date = ?, description = ?, image_url = ?
+                WHERE id = ?
+                """,
+                (
+                    transaction.user_id,
+                    transaction.category_id,
+                    transaction.amount,
+                    transaction.type,
+                    transaction.date,
+                    transaction.description,
+                    transaction.receipt_image_path,
+                    transaction.id,
+                )
+            )
+            print(f"Transakcija {transaction.id} je uspesno izmenjena.")
+            return True
+        except Exception as e:
+            print(f"Greska pri izmene transakcije: {e}")
+            return False
 
     def delete_transaction(self, transakcija: Transaction)-> bool:
         transakcija_check = self.get_transaction(transakcija)
