@@ -20,7 +20,7 @@ class FinanceService():
             print(f"greska prilikom dodavanja transakcije: {e}")
             return False
 
-    
+    ### pretraga jedne transakcije, moze se proslediti transakcija objekat ili id
     def get_transaction(self, transaction: Transaction | int) -> Transaction | None:
         if isinstance(transaction, Transaction):
             transaction_id = transaction.id
@@ -47,6 +47,7 @@ class FinanceService():
             print(f"greska, transakcija {transaction_id} nije pronadjena u bazi: {e}")
             return None
 
+    ### vracanje svih transakcija po datim kriterijumima, korisnik, kategorija, tip, datumski rang
     def get_transactions(
         self,
         user_id: int | None = None,
@@ -99,6 +100,7 @@ class FinanceService():
             print(f"Greška pri vraćanju transakcija: {e}")
             return None
 
+    ### izmena transakcije
     def update_transaction(self, transaction: Transaction) -> bool:
         transaction_check = self.get_transaction(transaction)
 
@@ -130,6 +132,7 @@ class FinanceService():
             print(f"Greska pri izmene transakcije: {e}")
             return False
 
+    ### brisanje
     def delete_transaction(self, transakcija: Transaction)-> bool:
         transakcija_check = self.get_transaction(transakcija)
 
@@ -149,7 +152,7 @@ class FinanceService():
             print(f"Greska prilkom brisanja kategorije {e}")
             return False
 
-
+    ### helperi, ya vracanje transakcija po raznim kriterijumima, korisnik, kategorija
     def get_user_transactions(self, user_id: str) -> list[Transaction] | None:   ## za ovo bi mogli mozda da passujemo usera celog, al mnogo je to importa okolo
         return self.get_transactions(user_id=user_id)
 
@@ -162,6 +165,8 @@ class FinanceService():
     def get_user_transactions_by_date_range(self, user_id: str, date_from: str, date_to: str) -> list[Transaction] | None:
         return self.get_transactions(user_id=user_id, date_from=date_from, date_to=date_to)
 
+    ### vracanje detaljisanih transakcija, pozeljno za prikaz, jer objedinjuje imena
+    ### kategorija i korisnika
     def get_user_transactions_details(self, user_id: str) -> list[TransactionView] | None:
         rows = self.db_manager.fetch_all("""
             SELECT

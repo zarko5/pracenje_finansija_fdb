@@ -10,6 +10,7 @@ def main():
     print("Baza inicijalizovana")
     # test_models(db)
 
+    ### pokretanje grafike
     app = App(db)
     
     app.mainloop()
