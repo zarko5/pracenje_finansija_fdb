@@ -70,15 +70,20 @@ class PoreskaService:
             total_price = item.get("total")
             img_path = invoice_data.get("img_name")
 
+            try:
+                amount = -abs(float(total_price or 0))
+            except (TypeError, ValueError):
+                amount = 0.0
+
             transaction = Transaction(
                 transaction_id=0,
-                user_id=user_id, 
-                category_id=category_id, 
-                amount=total_price,
+                user_id=user_id,
+                category_id=category_id,
+                amount=amount,
                 transaction_type="trosak",
                 transaction_date=datum.strftime("%Y-%m-%d"),
                 desc=f"{name} - {quantity} x {unit_price}",
-                img_path=img_path
+                img_path=img_path,
             )
             transactions.append(transaction)
 
