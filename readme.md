@@ -87,3 +87,9 @@ Ekran transakcije nam omogućava pregled svih transakcija od korisnika, kao i op
 Takođe, ukoliko postoji slika za transakciju, može se videti selektovanjem i klikom na prikaz slike.
 
 
+
+
+#### Uputstvo za postavku
+Napraviti venv, ili globalno instalirati biblioteke iz requirements.txt sa `pip install -r requreiemtns.txt`
+
+Nakon toga, aplikacija se pokrece pokretanjem `python main.py`
