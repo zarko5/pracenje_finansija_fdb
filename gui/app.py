@@ -3,6 +3,7 @@ from tkinter import ttk
 from gui.login import LoginEkran
 from gui.kategorije_screen import KategorijeScreen
 from gui.pregled_screen import PregledScreen
+from gui.izvestaji_screen import IzvestajiScreen
 from gui.transakcije_screen import TransakcijeScreen
 from .theme import *
 import services
@@ -10,6 +11,8 @@ import services
 class App(tk.Tk):
     def __init__(self,db):
         super().__init__()
+
+        apply_global_theme(self)
 
         self.title("Aplikacija za pracenje finansija")
         self.geometry("1920x1000")
@@ -61,9 +64,22 @@ class App(tk.Tk):
         self.kategorije_tab = KategorijeScreen(self.notebook,self)
         self.notebook.add(self.kategorije_tab, text="Kategorije")
 
-        self.izvestaji_tab = ttk.Frame(self.notebook)
+        self.izvestaji_tab = IzvestajiScreen(self.notebook, self)
         self.notebook.add(self.izvestaji_tab, text="Izvestaji")
-
 
         self.transakcije_tab = TransakcijeScreen(self.notebook, self)
         self.notebook.add(self.transakcije_tab, text="Transakcije")
+
+        self.notebook.bind("<<NotebookTabChanged>>", self._on_tab_changed)
+
+    def _on_tab_changed(self, event=None):
+        selected_tab = self.notebook.nametowidget(self.notebook.select())
+
+        if hasattr(selected_tab, "load_transactions"):
+            selected_tab.load_transactions()
+
+        if hasattr(selected_tab, "load_report_data"):
+            selected_tab.load_report_data()
+
+        if hasattr(selected_tab, "load_categories"):
+            selected_tab.load_categories()
